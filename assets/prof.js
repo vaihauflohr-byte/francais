@@ -30,7 +30,7 @@
   const duree = (s) => (s == null ? "" : s < 60 ? `${s} s` : `${Math.round(s / 60)} min`);
   const ERREURS = {
     PRENOM_EN_DOUBLE: "ce prénom existe déjà dans la classe (ajoutez l'initiale du nom : « Teva B. »)", CODE_INVALIDE: "code invalide",
-    RESERVE_PROF: "réservé aux profs", COMPTE_INCONNU: "aucun compte avec cette adresse : la collègue doit d'abord créer son compte (page de connexion, « Créer mon compte »)",
+    RESERVE_PROF: "réservé aux profs", COMPTE_INCONNU: "aucun compte avec cette adresse : créez-le d'abord dans Supabase (Authentication › Users › « Add user »)",
   };
   const msgErreur = (e) => { const m = (e && (e.message || e.error_description || e.code)) || String(e); const k = Object.keys(ERREURS).find((x) => m.includes(x)); return k ? ERREURS[k] : m; };
   // lecture complète (la base renvoie au plus 1 000 lignes à la fois)
@@ -68,11 +68,8 @@
         <p class="alerte ko" id="err" hidden></p><button class="btn principal plein" type="submit">Se connecter</button></form>
       <details><summary>Mot de passe oublié</summary><form id="fo" class="pile"><label class="champ"><span>Adresse e-mail</span><input name="email" type="email" required></label>
         <button class="btn" type="submit">Recevoir un lien</button><p class="discret" id="mo" hidden></p></form></details>
-      <details><summary>Première fois ? Créer mon compte</summary><form id="fc" class="pile">
-        <label class="champ"><span>Adresse e-mail</span><input name="email" type="email" autocomplete="username" required></label>
-        <label class="champ"><span>Mot de passe (10 caractères au moins)</span><input name="mdp" type="password" autocomplete="new-password" minlength="10" required></label>
-        <button class="btn" type="submit">Créer mon compte</button><p class="discret" id="mc" hidden></p>
-        <p class="discret">Ensuite, un collègue déjà inscrit vous ajoute dans Réglages › « Ajouter une collègue ».</p></form></details></div>`;
+      <details><summary>Première fois ?</summary><p class="discret">Les comptes prof sont créés par l'administrateur du site
+        (Supabase › Authentication › Users › « Add user »), puis activés par un collègue déjà inscrit dans Réglages › « Ajouter une collègue ».</p></details></div>`;
     U.$("#f").addEventListener("submit", async (ev) => {
       ev.preventDefault();
       const f = ev.target, err = U.$("#err"), b = U.$("button", f);
@@ -86,13 +83,6 @@
       ev.preventDefault();
       const { error } = await sb.auth.resetPasswordForEmail(ev.target.email.value.trim(), { redirectTo: location.origin + location.pathname });
       const m = U.$("#mo"); m.hidden = false; m.textContent = error ? "Échec : " + error.message : "Si un compte existe, un lien a été envoyé. Ouvrez-le sur cet appareil.";
-    });
-    U.$("#fc").addEventListener("submit", async (ev) => {
-      ev.preventDefault();
-      const f = ev.target;
-      const { error } = await sb.auth.signUp({ email: f.email.value.trim(), password: f.mdp.value, options: { emailRedirectTo: location.origin + location.pathname } });
-      const m = U.$("#mc"); m.hidden = false;
-      m.textContent = error ? "Échec : " + error.message : "Compte créé. Si un e-mail de confirmation arrive, cliquez sur le lien. Demandez ensuite à un collègue de vous ajouter.";
     });
   }
   function ecranNouveauMdp() {
@@ -368,7 +358,7 @@
   function ongletReglages() {
     const zone = U.$("#contenu");
     zone.innerHTML = `<section class="carte pile"><h2 style="margin-top:0">Ajouter une collègue</h2>
-        <p class="discret">Elle crée d'abord son compte sur la page de connexion (« Créer mon compte »), puis vous l'ajoutez ici avec son adresse.</p>
+        <p class="discret">Son compte est d'abord créé dans Supabase (Authentication › Users › « Add user », en cochant « Auto Confirm User »), puis vous l'ajoutez ici avec son adresse.</p>
         <form id="fp" class="rangee"><input class="champ-court" name="email" type="email" placeholder="adresse e-mail" required><button class="btn" type="submit">Ajouter</button></form></section>
       <section class="carte pile"><h2 style="margin-top:0">Classes</h2>
         <div class="tableau-scroll"><table class="grille"><thead><tr><th>Classe</th><th>Niveau</th><th>Visible</th></tr></thead><tbody>
