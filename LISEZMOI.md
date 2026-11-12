@@ -19,7 +19,7 @@ Il est **indépendant du site SI** : pas de lien entre les deux, ses données so
 - **Élèves et codes** : coller la liste des prénoms → comptes créés, cartes à imprimer. Les codes ne sont gardés que chiffrés : les imprimer tout de suite. « Nouveau code » en cas d'oubli ; « pause » ou suppression d'un compte.
 - **Exercices ouverts** : ouvrir ou fermer chaque exercice, classe par classe.
 - **Aperçu élève** : voir le site comme un élève d'un niveau (rien n'est enregistré).
-- **Réglages** : ajouter une collègue (elle crée d'abord son compte sur la page de connexion), ajouter ou masquer une classe.
+- **Réglages** : ajouter une collègue (son compte est d'abord créé dans Supabase › Authentication › Users › « Add user », car les inscriptions libres sont fermées sur le projet), ajouter ou masquer une classe.
 
 ## Contenu
 
